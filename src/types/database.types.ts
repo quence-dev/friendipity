@@ -3,11 +3,11 @@ export type Json =
   | number
   | boolean
   | null
-  | { [key:  string]: Json | undefined }
+  | { [key: string]: Json | undefined }
   | Json[]
 
 export interface Database {
-  public:  {
+  public: {
     Tables: {
       users: {
         Row: {
@@ -17,25 +17,25 @@ export interface Database {
           name: string
           photo_url: string | null
           is_available: boolean
-          created_at:  string
+          created_at: string
         }
         Insert: {
           id: string
           email: string
           phone_number: string
           name: string
-          photo_url?:  string | null
-          is_available?:  boolean
+          photo_url?: string | null
+          is_available?: boolean
           created_at?: string
         }
         Update: {
-          id?:  string
+          id?: string
           email?: string
           phone_number?: string
           name?: string
-          photo_url?:  string | null
+          photo_url?: string | null
           is_available?: boolean
-          created_at?:  string
+          created_at?: string
         }
       }
       friendships: {
@@ -48,7 +48,7 @@ export interface Database {
           updated_at: string
         }
         Insert: {
-          id?:  string
+          id?: string
           user_id: string
           friend_id: string
           status?: 'pending' | 'accepted' | 'rejected'
@@ -76,18 +76,18 @@ export interface Database {
           start_time: string
           end_time: string
           is_active: boolean
-          created_at:  string
+          created_at: string
         }
         Insert: {
           id?: string
           user_id: string
           title: string
           description?: string | null
-          location:  unknown
+          location: unknown
           location_name?: string | null
-          scheduled_start_time?:  string | null
-          start_time?:  string
-          end_time:  string
+          scheduled_start_time?: string | null
+          start_time?: string
+          end_time: string
           is_active?: boolean
           created_at?: string
         }
@@ -116,14 +116,14 @@ export interface Database {
         Insert: {
           id?: string
           activity_id: string
-          user_id:  string
+          user_id: string
           status?: 'interested' | 'on_my_way' | 'arrived'
           created_at?: string
         }
         Update: {
           id?: string
           activity_id?: string
-          user_id?:  string
+          user_id?: string
           status?: 'interested' | 'on_my_way' | 'arrived'
           created_at?: string
         }
@@ -136,13 +136,13 @@ export interface Database {
           created_at: string
         }
         Insert: {
-          id?:  string
+          id?: string
           user_id: string
           token: string
           created_at?: string
         }
         Update: {
-          id?:  string
+          id?: string
           user_id?: string
           token?: string
           created_at?: string
@@ -156,7 +156,7 @@ export interface Database {
         Returns: number
       }
       are_friends: {
-        Args:  { user1_id: string; user2_id: string }
+        Args: { user1_id: string; user2_id: string }
         Returns: boolean
       }
     }

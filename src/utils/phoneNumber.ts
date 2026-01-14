@@ -8,7 +8,7 @@ export function normalizePhoneNumber(phone: string): string {
 
   // Handle different formats
   if (digits.length === 10) {
-    // US number without country code:  2345678900 → +12345678900
+    // US number without country code: 2345678900 → +12345678900
     return `+1${digits}`;
   }
 

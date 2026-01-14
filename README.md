@@ -4,7 +4,7 @@ A spontaneous social meetup app that flips the traditional event invitation mode
 
 ## 🎯 Core Concept
 
-**Traditional apps:** "I'm hosting dinner at 7pm.  Want to come?" (requires RSVPs, planning, coordination)
+**Traditional apps:** "I'm hosting dinner at 7pm. Want to come?" (requires RSVPs, planning, coordination)
 
 **friendipity:** "I'm grabbing coffee at Blue Bottle right now" (friends can just show up)
 
@@ -32,13 +32,12 @@ Share what you're doing and where you are—with the implicit invitation that ot
 
 ```bash
 # Clone and install
-git clone https://github.com/YOUR_USERNAME/friendipity. git
+git clone https://github.com/YOUR_USERNAME/friendipity.git
 cd friendipity
 npm install
 
-# Configure environment
-cp .env.example .env
 # Add your Supabase URL and anon key to .env
+touch .env
 
 # Set up Supabase database
 # Run the SQL schema from docs/schema.sql in your Supabase SQL Editor

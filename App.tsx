@@ -11,9 +11,9 @@ function AppContent() {
       const { error } = await supabase.from('users').select('count');
       
       if (error) {
-        Alert.alert('Error', error. message);
+        Alert.alert('Error', error.message);
       } else {
-        Alert.alert('Success', 'Supabase connection working!  ✅');
+        Alert.alert('Success', 'Supabase connection working! ✅');
       }
     } catch (error) {
       Alert.alert('Error', 'Failed to connect to Supabase');
@@ -22,7 +22,7 @@ function AppContent() {
 
   if (loading) {
     return (
-      <View style={styles. container}>
+      <View style={styles.container}>
         <Text>Loading...</Text>
       </View>
     );
@@ -34,14 +34,14 @@ function AppContent() {
       
       {user ? (
         <>
-          <Text style={styles. subtitle}>Logged in as: {user.email}</Text>
+          <Text style={styles.subtitle}>Logged in as: {user.email}</Text>
           <Text style={styles.info}>Name: {user.name}</Text>
-          <Text style={styles. info}>Phone: {user.phone_number}</Text>
+          <Text style={styles.info}>Phone: {user.phone_number}</Text>
           <Button title="Sign Out" onPress={signOut} />
         </>
       ) : (
         <>
-          <Text style={styles. subtitle}>Not logged in</Text>
+          <Text style={styles.subtitle}>Not logged in</Text>
           <Text style={styles.info}>Auth setup complete!</Text>
         </>
       )}
@@ -65,23 +65,23 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex:  1,
+    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
   },
   title: {
-    fontSize:  36,
+    fontSize: 36,
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  subtitle:  {
+  subtitle: {
     fontSize: 18,
     color: '#666',
     marginBottom: 10,
   },
-  info:  {
+  info: {
     fontSize: 14,
     color: '#999',
     marginBottom: 5,
