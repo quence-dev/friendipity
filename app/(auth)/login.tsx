@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import * as Linking from 'expo-linking';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { supabase } from '@/services/supabase';
@@ -39,10 +40,13 @@ export default function LoginScreen() {
 
     setLoading(true);
     try {
+      const redirectUrl = Linking.createURL('/(auth)/login');
+      console.log('Redirect URL:', redirectUrl); // Debug:  see what URL is generated
+
       const { error } = await supabase.auth.signInWithOtp({
         email: trimmedEmail,
         options: {
-          emailRedirectTo: 'friendipity://',
+          emailRedirectTo: redirectUrl,
         },
       });
 
