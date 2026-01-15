@@ -1,0 +1,10 @@
+node_modules/
+.expo/
+dist/
+.expo-shared/
+web-build/
+package-lock.json
+README.md
+tsconfig.json
+*.types.ts
+*.config.js
