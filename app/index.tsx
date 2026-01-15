@@ -11,7 +11,7 @@ export default function HomeScreen() {
   const testConnection = async () => {
     try {
       const { error } = await supabase.from('users').select('count');
-      
+
       if (error) {
         Alert.alert('Error', error.message);
       } else {
@@ -25,7 +25,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>friendipity</Text>
-      
+
       {user ? (
         <>
           <Text style={styles.subtitle}>Logged in as: {user.email}</Text>
@@ -36,17 +36,14 @@ export default function HomeScreen() {
       ) : (
         <>
           <Text style={styles.subtitle}>Not logged in</Text>
-          <Button 
-            title="Login / Sign Up" 
-            onPress={() => router.push('/(auth)/login')}
-          />
+          <Button title="Login / Sign Up" onPress={() => router.push('/(auth)/login')} />
         </>
       )}
-      
+
       <View style={styles.buttonContainer}>
         <Button title="Test Supabase Connection" onPress={testConnection} />
       </View>
-      
+
       <StatusBar style="auto" />
     </View>
   );

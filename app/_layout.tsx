@@ -15,7 +15,7 @@ function RootLayoutContent() {
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" options={{ title: 'Splash'}}/>
+      <Stack.Screen name="index" options={{ title: 'Splash' }} />
       <Stack.Screen name="(auth)/login" options={{ title: 'Login' }} />
     </Stack>
   );

@@ -13,20 +13,21 @@ export default function LoginScreen() {
 
   async function validateEmail() {
     try {
-        // TODO
-    } catch(error) {
-        // TODO
+      // TODO
+    } catch (error) {
+      // TODO
     }
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.text}>This will be the login screen.</Text>
-      <TextInput autoComplete='email'
+      <TextInput
+        autoComplete="email"
         onChangeText={setEmail}
         value={email}
-        placeholder='johndoe@gmail.com'
-        />
+        placeholder="johndoe@gmail.com"
+      />
     </SafeAreaView>
   );
 }
