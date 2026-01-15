@@ -1,8 +1,17 @@
 import { useState } from 'react';
-import { Text, TextInput, StyleSheet, Alert, Button } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Pressable,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { supabase } from '@/services/supabase';
-import { loginSchema } from '@/schemas';
 
 function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -10,41 +19,59 @@ function isValidEmail(email: string): boolean {
 }
 
 export default function LoginScreen() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
-  const [invalid, setInvalid] = useState(false);
 
-  function handleBlur() {
-    if (!isValidEmail(email)) {
-      setInvalid(true);
-      return false;
-    } else {
-      setInvalid(false);
-      return true;
+  async function handleSendMagicLink() {
+    const trimmedEmail = email.trim().toLowerCase();
+
+    if (!trimmedEmail) {
+      Alert.alert('Error', 'Please enter your email address');
+      return;
     }
-  }
 
-  async function validateEmail() {
-    const isValid = handleBlur();
-    if (isValid) {
+    if (!isValidEmail(trimmedEmail)) {
+      Alert.alert('Error', 'Please enter a valid email address');
       return;
     }
 
     setLoading(true);
     try {
       const { error } = await supabase.auth.signInWithOtp({
-        email: email.trim().toLowerCase(),
+        email: trimmedEmail,
         options: {
-          emailRedirectTo: 'friendipity://', // Deep link back to app
+          emailRedirectTo: 'friendipity://',
         },
       });
-      if (error) throw error;
-      setSent(true);
-      Alert.alert('Check your email! ', 'We sent you a magic link.');
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      Alert.alert('Error', message);
+
+      if (error) {
+        // Handle rate limiting specifically
+        if (error.message.includes('Email rate limit exceeded')) {
+          Alert.alert(
+            'Too many requests',
+            'Please wait a minute before requesting another magic link.'
+          );
+        } else {
+          Alert.alert('Error', error.message);
+        }
+      } else {
+        setSent(true);
+        Alert.alert(
+          'Check your email!  📧',
+          `We sent a magic link to ${trimmedEmail}. Click the link to sign in.`,
+          [
+            {
+              text: 'OK',
+              onPress: () => router.back(), // Go back to home
+            },
+          ]
+        );
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -52,21 +79,44 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.text}>This will be the login screen.</Text>
-      <TextInput
-        autoComplete="email"
-        onChangeText={setEmail}
-        onBlur={handleBlur}
-        value={email}
-        placeholder="johndoe@gmail.com"
-      />
-      {invalid && <Text>Invalid email</Text>}
-      <Button title="Send code" onPress={validateEmail} disabled={loading} />
-      {/* { loading ? (<>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardView}>
+        <View style={styles.content}>
+          {/* Header */}
+          <Text style={styles.title}>Welcome to friendipity</Text>
+          <Text style={styles.subtitle}>Sign in with your email to get started</Text>
 
-        </>
-        ) : (<>
-        </>)} */}
+          {/* Email Input */}
+          <TextInput
+            style={styles.input}
+            placeholder="your@email.com"
+            placeholderTextColor="#999"
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            autoComplete="email"
+            autoCorrect={false}
+            keyboardType="email-address"
+            editable={!loading && !sent}
+          />
+
+          {/* Send Button */}
+          <Pressable
+            style={[styles.button, (loading || sent) && styles.buttonDisabled]}
+            onPress={handleSendMagicLink}
+            disabled={loading || sent}>
+            <Text style={styles.buttonText}>
+              {loading ? 'Sending...' : sent ? 'Email Sent ✓' : 'Send Magic Link'}
+            </Text>
+          </Pressable>
+
+          {/* Help Text */}
+          <Text style={styles.helpText}>
+            {"We'll send you a magic link to sign in without a password"}
+          </Text>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -75,31 +125,57 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
+  },
+  keyboardView: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
     justifyContent: 'center',
-    padding: 20,
+    padding: 24,
   },
   title: {
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  text: {
-    fontSize: 18,
-    color: '#000',
-    marginBottom: 10,
+    marginBottom: 8,
+    textAlign: 'center',
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#666',
-    marginBottom: 10,
+    marginBottom: 32,
+    textAlign: 'center',
   },
-  info: {
+  input: {
+    height: 56,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    marginBottom: 16,
+    backgroundColor: '#f9f9f9',
+  },
+  button: {
+    height: 56,
+    backgroundColor: '#007AFF',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  buttonDisabled: {
+    backgroundColor: '#ccc',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  helpText: {
     fontSize: 14,
     color: '#999',
-    marginBottom: 5,
-  },
-  buttonContainer: {
-    marginTop: 20,
+    textAlign: 'center',
+    paddingHorizontal: 32,
   },
 });
