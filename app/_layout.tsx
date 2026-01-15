@@ -1,4 +1,4 @@
-import { Slot } from 'expo-router';
+import { Stack } from 'expo-router';
 import { ActivityIndicator, View } from 'react-native';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 
@@ -13,7 +13,12 @@ function RootLayoutContent() {
     );
   }
 
-  return <Slot />;
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="index" options={{ title: 'Splash'}}/>
+      <Stack.Screen name="(auth)/login" options={{ title: 'Login' }} />
+    </Stack>
+  );
 }
 
 export default function RootLayout() {
